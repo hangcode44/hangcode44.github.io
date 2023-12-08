@@ -1,0 +1,335 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+                <link href="lib/tom-select/tom-select.css" rel="stylesheet">
+                <script src="lib/tom-select/tom-select.complete.min.js"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #3A3B3C;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+              <div id="filter-menu" class="card-header">
+                <div class="row no-gutters">
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'item')"
+                            id="select-item"
+                        >
+                        <option value="">Select a network item</option>
+                        <option value="edge">edge</option>
+                        <option value="node">node</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'property')"
+                            id="select-property"
+                        >
+                        <option value="">Select a property...</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            id="select-value"
+                        >
+                        <option value="">Select value(s)...</option>
+                    </select>
+                  </div>
+                  <div class="col-1 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="highlightFilter(filter);">Filter</button>
+                  </div>
+                  <div class="col-2 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="clearFilter(true)">Reset Selection</button>
+                  </div>
+                </div>
+              </div>
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+                  // explicitly using onItemAdd and this function as we need to save multiple values
+                  let updateValueFilter = function() {
+                      return function () {
+                      filter['value'].push(arguments[0])
+                      }
+                  }
+
+                  let valueControl = new TomSelect("#select-value",{
+                      maxItems: null,
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: updateValueFilter()
+                  });
+
+                  let addValues = function() {
+                      return function () {
+                          // clear the current value options and add the selected attribute values
+                          // tom-select handles duplicates
+                          let selectedProperty = arguments[0];
+                          valueControl.clear();
+                          valueControl.clearOptions();
+                          filter['value'] = []
+                          if (filter['item'] === 'node') {
+                              for (let each in allNodes) {
+                                  valueControl.addOption({
+                                      id:allNodes[each][selectedProperty],
+                                      title:allNodes[each][selectedProperty]
+                                  })
+                              }
+                          }
+                          else if (filter['item'] === 'edge') {
+                              for (let each in allEdges) {
+                                  valueControl.addOption({
+                                      id:allEdges[each][selectedProperty],
+                                      title:allEdges[each][selectedProperty]
+                                  })
+                              }
+                          }
+                      }
+                  };
+
+                  let propControl = new TomSelect("#select-property",{
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addValues()
+                  });
+
+                  let addProperties = function() {
+                      return function () {
+                          // loops through the selected network item and adds the attributes to dropdown
+                          // tom-select handles duplicates
+                          clearFilter(false)
+                          if (arguments[0] === 'edge') {
+                              for (let each in allEdges) {
+                                  if (allEdges.hasOwnProperty(each)) {
+                                      for (let eachProp in allEdges[each]) {
+                                          if (allEdges[each].hasOwnProperty(eachProp)) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                          else if (arguments[0] === 'node') {
+                              for (let each in allNodes) {
+                                  if (allNodes.hasOwnProperty(each)) {
+                                      for (let eachProp in allNodes[each]) {
+                                          if (allNodes[each].hasOwnProperty(eachProp)
+                                              && (eachProp !== 'hidden' && eachProp !== 'savedLabel'
+                                                  && eachProp !== 'hiddenLabel')) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  };
+
+                  let itemControl = new TomSelect("#select-item",{
+                      create: false,
+                      sortField:{
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addProperties()
+                  });
+
+                  function clearFilter(reset) {
+                      // utility function to clear all the selected filter options
+                      // if reset is set to true, the existing filter will be removed
+                      // else, only the dropdown options are cleared
+                      propControl.clear();
+                      propControl.clearOptions();
+                      valueControl.clear();
+                      valueControl.clearOptions();
+                      filter = {
+                          item : '',
+                          property : '',
+                          value : []
+                      }
+                      if (reset) {
+                          itemControl.clear();
+                          filterHighlight({nodes: []})
+                      }
+                  }
+
+                  function updateFilter(value, key) {
+                      // key could be 'item' or 'property' and value is as selected in dropdown
+                      filter[key] = value
+                  }
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "white"}, "id": "report authors", "label": "report authors", "shape": "dot", "size": 10, "title": "report authors", "value": 1, "x": 614.4957918161325, "y": 685.3066464459176}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "OECD", "label": "OECD", "shape": "dot", "size": 10, "title": "OECD", "value": 18, "x": -158.4646215117232, "y": 96.9631294241627}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "also Russian 1956", "label": "also Russian 1956", "shape": "dot", "size": 10, "value": 0, "x": -4836.289663873243, "y": 8001.160354790104}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "bilateral swaps creditors", "label": "bilateral swaps creditors", "shape": "dot", "size": 10, "value": 0, "x": 8564.172743752442, "y": 4343.233634740955}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "available Annex report", "label": "available Annex report", "shape": "dot", "size": 10, "value": 0, "x": 4046.422286523285, "y": 8621.141785984837}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "natural fauna beauty", "label": "natural fauna beauty", "shape": "dot", "size": 10, "value": 0, "x": 2783.9051422186512, "y": -8530.420818890974}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "use biological resources water others", "label": "use biological resources water others", "shape": "dot", "size": 10, "value": 0, "x": -8489.300511584, "y": -3815.2618565060425}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "key element strategy", "label": "key element strategy", "shape": "dot", "size": 10, "value": 0, "x": 5189.532147549959, "y": -8168.802840311413}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "potential  rents", "label": "potential  rents", "shape": "dot", "size": 10, "value": 0, "x": -7367.242712785469, "y": -5628.25736353904}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "agricultural land labour costs", "label": "agricultural land labour costs", "shape": "dot", "size": 10, "value": 0, "x": 9544.193588538756, "y": 1295.545794843609}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "harmful  Chapter", "label": "harmful  Chapter", "shape": "dot", "size": 10, "value": 0, "x": -628.9222620820226, "y": -8697.007484363745}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "agriculture", "label": "agriculture", "shape": "dot", "size": 10, "value": 0, "x": -8476.141320166733, "y": -279.39629251935}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "sensitive order eg", "label": "sensitive order eg", "shape": "dot", "size": 10, "value": 0, "x": -3268.6916352515373, "y": 7075.76310127534}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "directly half production", "label": "directly half production", "shape": "dot", "size": 10, "value": 0, "x": -4574.298111780232, "y": -8962.569359744435}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "direct support search development", "label": "direct support search development", "shape": "dot", "size": 10, "value": 0, "x": 8243.193864108229, "y": 6226.395510877297}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "developing impor countries", "label": "developing impor countries", "shape": "dot", "size": 10, "value": 0, "x": -7820.141569634986, "y": 3092.5684261720476}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "harmful sectors extent effects", "label": "harmful sectors extent effects", "shape": "dot", "size": 10, "value": 0, "x": 874.3225015688166, "y": 8399.223796501952}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "prioritised reform efforts sectors", "label": "prioritised reform efforts sectors", "shape": "dot", "size": 10, "value": 0, "x": 4831.073170744953, "y": 7181.9722124855025}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "2008 Executive Summary", "label": "2008 Executive Summary", "shape": "dot", "size": 10, "value": 0, "x": -5628.865981246991, "y": -6640.216994946776}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Paris Club countries", "label": "Paris Club countries", "shape": "dot", "size": 10, "title": "Paris Club countries", "value": 1, "x": -768.0846433011313, "y": 273.86318274419773}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "WWF", "label": "WWF", "shape": "dot", "size": 10, "title": "WWF", "value": 9, "x": -880.802235375251, "y": -107.73517779343383}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "mostly  swaps", "label": "mostly  swaps", "shape": "dot", "size": 10, "value": 0, "x": 2117.905966469852, "y": 9172.333696391219}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "environmental forest types plantations", "label": "environmental forest types plantations", "shape": "dot", "size": 10, "value": 0, "x": -8921.187404054599, "y": 1038.5106407940139}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "best solution tackle problem", "label": "best solution tackle problem", "shape": "dot", "size": 10, "value": 0, "x": 7939.788971828966, "y": -6992.211510301951}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "innovative conservation programs", "label": "innovative conservation programs", "shape": "dot", "size": 10, "value": 0, "x": -7431.0846370918825, "y": 1855.3281368808416}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Nigeria 01 million", "label": "Nigeria 01 million", "shape": "dot", "size": 10, "value": 0, "x": 1201.014531631786, "y": -9220.24343665739}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "harmful  impacts", "label": "harmful  impacts", "shape": "dot", "size": 10, "value": 0, "x": -7616.355296066066, "y": -3152.604778904172}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "supportive outcomes policy challenges", "label": "supportive outcomes policy challenges", "shape": "dot", "size": 10, "value": 0, "x": -5787.712166930866, "y": 5999.59481409622}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "direct expenditure eg", "label": "direct expenditure eg", "shape": "dot", "size": 10, "value": 0, "x": -8830.23972246466, "y": -1772.297167458044}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "2005 Benefits Costs Islands", "label": "2005 Benefits Costs Islands", "shape": "dot", "size": 10, "value": 0, "x": 9676.852460534901, "y": 3244.9830461246593}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Commission European Communities", "label": "Commission European Communities", "shape": "dot", "size": 10, "title": "Commission European Communities", "value": 1, "x": 813.5116154584219, "y": 456.5919984216291}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "need incentive measures", "label": "need incentive measures", "shape": "dot", "size": 10, "title": "need incentive measures", "value": 1, "x": 416.57568844283685, "y": 340.62063398481376}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "potential market creation implementation", "label": "potential market creation implementation", "shape": "dot", "size": 10, "title": "potential market creation implementation", "value": 1, "x": 171.84657746972354, "y": 695.0679594938855}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "regulated property rights resources", "label": "regulated property rights resources", "shape": "dot", "size": 10, "title": "regulated property rights resources", "value": 1, "x": 794.7294744211054, "y": 152.2417704438563}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "detailed discussion issues", "label": "detailed discussion issues", "shape": "dot", "size": 10, "title": "detailed discussion issues", "value": 1, "x": -941.5655009228454, "y": 771.2867830280053}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "It", "label": "It", "shape": "dot", "size": 10, "title": "It", "value": 1, "x": -482.24784836356235, "y": -507.5716330961768}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "United Nations", "label": "United Nations", "shape": "dot", "size": 10, "title": "United Nations", "value": 6, "x": -53.6650307361474, "y": -1252.3205451964543}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "2002 International Year Ecotourism", "label": "2002 International Year Ecotourism", "shape": "dot", "size": 10, "value": 0, "x": -2165.019880826143, "y": 8108.339698929075}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "national  capacities", "label": "national  capacities", "shape": "dot", "size": 10, "value": 0, "x": -6625.146601235428, "y": -7399.172820285106}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "combined fi gures", "label": "combined fi gures", "shape": "dot", "size": 10, "value": 0, "x": 8717.891673783772, "y": -4405.500251788662}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "developmental technology transfer goals", "label": "developmental technology transfer goals", "shape": "dot", "size": 10, "value": 0, "x": 3827.914245156554, "y": -7217.839850438177}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Social A airs", "label": "Social A airs", "shape": "dot", "size": 10, "value": 0, "x": -2178.8235412448353, "y": -9278.378549103123}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "global  use", "label": "global  use", "shape": "dot", "size": 10, "value": 0, "x": -1260.1787301392767, "y": 8925.574270295943}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Most  ecotourists", "label": "Most  ecotourists", "shape": "dot", "size": 10, "title": "Most  ecotourists", "value": 1, "x": 388.64737722255484, "y": -91.7427930763692}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Paying", "label": "Paying", "shape": "dot", "size": 10, "title": "Paying", "value": 1, "x": -801.0684347707274, "y": -509.1004261367997}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "parks", "label": "parks", "shape": "dot", "size": 10, "title": "parks", "value": 1, "x": 241.603024266736, "y": -518.1452449866251}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Investors Case Study", "label": "Investors Case Study", "shape": "dot", "size": 10, "title": "Investors Case Study", "value": 1, "x": 795.0566847693839, "y": -150.61140855050596}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "paper authors", "label": "paper authors", "shape": "dot", "size": 10, "title": "paper authors", "value": 1, "x": -135.46124950412442, "y": -535.8587552652832}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "funds", "label": "funds", "shape": "dot", "size": 10, "title": "funds", "value": 1, "x": -725.7497428159267, "y": 1000.6241885406192}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "unreliable sound development strategy", "label": "unreliable sound development strategy", "shape": "dot", "size": 10, "title": "unreliable sound development strategy", "value": 1, "x": 154.64086818800575, "y": -2232.8015790390086}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "persistent poverty vulnerability", "label": "persistent poverty vulnerability", "shape": "dot", "size": 10, "title": "persistent poverty vulnerability", "value": 1, "x": -769.2463861615195, "y": -1686.66627861534}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "50 farmers cash income", "label": "50 farmers cash income", "shape": "dot", "size": 10, "title": "50 farmers cash income", "value": 1, "x": -195.92582599871463, "y": -2236.5774168935236}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "shifts", "label": "shifts", "shape": "dot", "size": 10, "title": "shifts", "value": 1, "x": 720.9519275568517, "y": -1587.6816263385651}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "national assi stance", "label": "national assi stance", "shape": "dot", "size": 10, "title": "national assi stance", "value": 1, "x": 678.9743599395553, "y": -1904.3814996424846}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Capacitybuilding", "label": "Capacitybuilding", "shape": "dot", "size": 10, "title": "Capacitybuilding", "value": 1, "x": -1107.5093691427292, "y": 512.3219446119867}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "developing countries coverage", "label": "developing countries coverage", "shape": "dot", "size": 10, "title": "developing countries coverage", "value": 1, "x": -664.1342144269839, "y": -1994.160133631678}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "commercial development response climate", "label": "commercial development response climate", "shape": "dot", "size": 10, "title": "commercial development response climate", "value": 1, "x": -372.41107763908275, "y": -2006.7042499087918}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "still  area", "label": "still  area", "shape": "dot", "size": 10, "title": "still  area", "value": 1, "x": 69.3544646840646, "y": -1875.43759111626}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "effective behaviour community members", "label": "effective behaviour community members", "shape": "dot", "size": 10, "title": "effective behaviour community members", "value": 1, "x": 452.535309079867, "y": 942.1453868228223}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "collective consumption club", "label": "collective consumption club", "shape": "dot", "size": 10, "title": "collective consumption club", "value": 1, "x": -596.3437869534919, "y": 623.8211708906102}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "There  manyexisting", "label": "There  manyexisting", "shape": "dot", "size": 10, "title": "There  manyexisting", "value": 1, "x": -1814.1361326396802, "y": -224.81972829716034}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Setting", "label": "Setting", "shape": "dot", "size": 10, "title": "Setting", "value": 1, "x": 4092.3092492013475, "y": 2761.0789457256024}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "European Commission", "label": "European Commission", "shape": "dot", "size": 10, "title": "European Commission", "value": 4, "x": 3429.0126051254074, "y": 2596.07396582034}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "notably territory EU", "label": "notably territory EU", "shape": "dot", "size": 10, "value": 0, "x": 10000.0, "y": -192.96405331223278}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "wider improvement tool", "label": "wider improvement tool", "shape": "dot", "size": 10, "value": 0, "x": -7141.421481268412, "y": 5114.225879783309}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "biodiversity loss COM", "label": "biodiversity loss COM", "shape": "dot", "size": 10, "value": 0, "x": 6372.30305345486, "y": 7789.754490826977}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "strong Fair Trade movement", "label": "strong Fair Trade movement", "shape": "dot", "size": 10, "value": 0, "x": 9766.097758767663, "y": -2261.2370141463025}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "1993 SNA revision", "label": "1993 SNA revision", "shape": "dot", "size": 10, "title": "1993 SNA revision", "value": 1, "x": 415.36969701204254, "y": -2026.697947530982}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "need", "label": "need", "shape": "dot", "size": 10, "title": "need", "value": 1, "x": 596.604945211347, "y": -428.4301227013816}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "subsidies sup", "label": "subsidies sup", "shape": "dot", "size": 10, "title": "subsidies sup", "value": 1, "x": -1148.99382631752, "y": 183.89559684210212}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "benefits subsidies", "label": "benefits subsidies", "shape": "dot", "size": 10, "title": "benefits subsidies", "value": 1, "x": -432.62478414146, "y": 1084.470191846042}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "planning change maximise forces", "label": "planning change maximise forces", "shape": "dot", "size": 10, "title": "planning change maximise forces", "value": 1, "x": 160.9248304537312, "y": 1083.4996947592497}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "support ethanol biodiesel", "label": "support ethanol biodiesel", "shape": "dot", "size": 10, "title": "support ethanol biodiesel", "value": 1, "x": -220.55324387045042, "y": 740.0930005889949}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Economic Cooperation Develop", "label": "Economic Cooperation Develop", "shape": "dot", "size": 10, "title": "Economic Cooperation Develop", "value": 1, "x": -134.63339966168152, "y": 1122.0885730492091}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Support Ethanol Biodiesel", "label": "Support Ethanol Biodiesel", "shape": "dot", "size": 10, "title": "Support Ethanol Biodiesel", "value": 1, "x": -1082.6702037791867, "y": -248.33220038975915}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "sys tem level", "label": "sys tem level", "shape": "dot", "size": 10, "title": "sys tem level", "value": 1, "x": 3829.6261908087786, "y": 3132.4547461455627}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "report authors", "label": "expressed", "to": "OECD", "width": 1}, {"arrows": "to", "from": "OECD", "label": "set", "to": "also Russian 1956", "width": 1}, {"arrows": "to", "from": "OECD", "label": "requested", "to": "bilateral swaps creditors", "width": 1}, {"arrows": "to", "from": "OECD", "label": "cautions", "to": "OECD", "width": 1}, {"arrows": "to", "from": "OECD", "label": "presented", "to": "available Annex report", "width": 1}, {"arrows": "to", "from": "OECD", "label": "play", "to": "natural fauna beauty", "width": 1}, {"arrows": "to", "from": "OECD", "label": "linked pollution", "to": "use biological resources water others", "width": 1}, {"arrows": "to", "from": "OECD", "label": "highlighted", "to": "key element strategy", "width": 1}, {"arrows": "to", "from": "OECD", "label": "meet strong", "to": "potential  rents", "width": 1}, {"arrows": "to", "from": "OECD", "label": "require major", "to": "agricultural land labour costs", "width": 1}, {"arrows": "to", "from": "OECD", "label": "underlined", "to": "harmful  Chapter", "width": 1}, {"arrows": "to", "from": "OECD", "label": "estimates", "to": "agriculture", "width": 1}, {"arrows": "to", "from": "OECD", "label": "implemented", "to": "sensitive order eg", "width": 1}, {"arrows": "to", "from": "OECD", "label": "corresponds general", "to": "directly half production", "width": 1}, {"arrows": "to", "from": "OECD", "label": "come", "to": "direct support search development", "width": 1}, {"arrows": "to", "from": "OECD", "label": "eliminated", "to": "developing impor countries", "width": 1}, {"arrows": "to", "from": "OECD", "label": "come", "to": "harmful sectors extent effects", "width": 1}, {"arrows": "to", "from": "OECD", "label": "conclude", "to": "prioritised reform efforts sectors", "width": 1}, {"arrows": "to", "from": "OECD", "label": "shing", "to": "2008 Executive Summary", "width": 1}, {"arrows": "to", "from": "Paris Club countries", "label": "shows likely", "to": "OECD", "width": 1}, {"arrows": "to", "from": "WWF", "label": "negotiated", "to": "mostly  swaps", "width": 1}, {"arrows": "to", "from": "WWF", "label": "supported", "to": "environmental forest types plantations", "width": 1}, {"arrows": "to", "from": "WWF", "label": "find best", "to": "best solution tackle problem", "width": 1}, {"arrows": "to", "from": "WWF", "label": "introduced successful", "to": "innovative conservation programs", "width": 1}, {"arrows": "to", "from": "WWF", "label": "include", "to": "Nigeria 01 million", "width": 1}, {"arrows": "to", "from": "WWF", "label": "develop ment", "to": "harmful  impacts", "width": 1}, {"arrows": "to", "from": "WWF", "label": "develop", "to": "supportive outcomes policy challenges", "width": 1}, {"arrows": "to", "from": "WWF", "label": "form direct", "to": "direct expenditure eg", "width": 1}, {"arrows": "to", "from": "WWF", "label": "tected", "to": "2005 Benefits Costs Islands", "width": 1}, {"arrows": "to", "from": "Commission European Communities", "label": "takes", "to": "OECD", "width": 1}, {"arrows": "to", "from": "need incentive measures", "label": "stressed need", "to": "OECD", "width": 1}, {"arrows": "to", "from": "potential market creation implementation", "label": "harnessing", "to": "OECD", "width": 1}, {"arrows": "to", "from": "regulated property rights resources", "label": "analysed", "to": "OECD", "width": 1}, {"arrows": "to", "from": "detailed discussion issues", "label": "found", "to": "OECD", "width": 1}, {"arrows": "to", "from": "It", "label": "involve different", "to": "OECD", "width": 1}, {"arrows": "to", "from": "United Nations", "label": "designated", "to": "2002 International Year Ecotourism", "width": 1}, {"arrows": "to", "from": "United Nations", "label": "works", "to": "national  capacities", "width": 1}, {"arrows": "to", "from": "United Nations", "label": "composed", "to": "combined fi gures", "width": 1}, {"arrows": "to", "from": "United Nations", "label": "included explicit", "to": "developmental technology transfer goals", "width": 1}, {"arrows": "to", "from": "United Nations", "label": "partment", "to": "Social A airs", "width": 1}, {"arrows": "to", "from": "United Nations", "label": "published", "to": "global  use", "width": 1}, {"arrows": "to", "from": "Most  ecotourists", "label": "come", "to": "OECD", "width": 1}, {"arrows": "to", "from": "Paying", "label": "restricted", "to": "OECD", "width": 1}, {"arrows": "to", "from": "parks", "label": "based recent", "to": "OECD", "width": 1}, {"arrows": "to", "from": "Investors Case Study", "label": "prepared", "to": "OECD", "width": 1}, {"arrows": "to", "from": "paper authors", "label": "expressed", "to": "OECD", "width": 1}, {"arrows": "to", "from": "funds", "label": "openend", "to": "OECD", "width": 1}, {"arrows": "to", "from": "unreliable sound development strategy", "label": "fuelled much", "to": "United Nations", "width": 1}, {"arrows": "to", "from": "persistent poverty vulnerability", "label": "trapped vicious", "to": "United Nations", "width": 1}, {"arrows": "to", "from": "50 farmers cash income", "label": "nontimber", "to": "United Nations", "width": 1}, {"arrows": "to", "from": "shifts", "label": "accompanied", "to": "United Nations", "width": 1}, {"arrows": "to", "from": "national assi stance", "label": "need", "to": "United Nations", "width": 1}, {"arrows": "to", "from": "Capacitybuilding", "label": "pursued", "to": "OECD", "width": 1}, {"arrows": "to", "from": "developing countries coverage", "label": "operate limited", "to": "United Nations", "width": 1}, {"arrows": "to", "from": "commercial development response climate", "label": "change Public", "to": "United Nations", "width": 1}, {"arrows": "to", "from": "still  area", "label": "needed", "to": "United Nations", "width": 1}, {"arrows": "to", "from": "effective behaviour community members", "label": "managed", "to": "OECD", "width": 1}, {"arrows": "to", "from": "collective consumption club", "label": "provided private", "to": "OECD", "width": 1}, {"arrows": "to", "from": "There  manyexisting", "label": "provide", "to": "WWF", "width": 1}, {"arrows": "to", "from": "Setting", "label": "met latter", "to": "European Commission", "width": 1}, {"arrows": "to", "from": "European Commission", "label": "regards", "to": "notably territory EU", "width": 1}, {"arrows": "to", "from": "European Commission", "label": "supports wider", "to": "wider improvement tool", "width": 1}, {"arrows": "to", "from": "European Commission", "label": "challenges", "to": "biodiversity loss COM", "width": 1}, {"arrows": "to", "from": "European Commission", "label": "issued", "to": "strong Fair Trade movement", "width": 1}, {"arrows": "to", "from": "1993 SNA revision", "label": "developed", "to": "United Nations", "width": 1}, {"arrows": "to", "from": "need", "label": "dies", "to": "OECD", "width": 1}, {"arrows": "to", "from": "subsidies sup", "label": "undermined", "to": "OECD", "width": 1}, {"arrows": "to", "from": "benefits subsidies", "label": "provide powerful", "to": "OECD", "width": 1}, {"arrows": "to", "from": "planning change maximise forces", "label": "convincing", "to": "OECD", "width": 1}, {"arrows": "to", "from": "support ethanol biodiesel", "label": "selected", "to": "OECD", "width": 1}, {"arrows": "to", "from": "Economic Cooperation Develop", "label": "ment", "to": "OECD", "width": 1}, {"arrows": "to", "from": "Support Ethanol Biodiesel", "label": "Selected", "to": "OECD", "width": 1}, {"arrows": "to", "from": "sys tem level", "label": "indicated", "to": "European Commission", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
