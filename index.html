@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Knowledge Graph Tabs</title>
+</head>
+<body>
+
+<div class="container mt-5">
+    <ul class="nav nav-tabs" id="myTabs">
+        <li class="nav-item">
+            <a class="nav-link active" id="tab1" data-bs-toggle="tab" href="#content1">Epoch 1</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab2" data-bs-toggle="tab" href="#content2">Epoch 2</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab3" data-bs-toggle="tab" href="#content3">Epoch 3</a>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-2">
+        <div class="tab-pane fade show active" id="content1">
+            <!-- Include content for Epoch 1 -->
+            <iframe src="epoch1.html" width="100%" height="800px" frameborder="0"></iframe>
+        </div>
+        <div class="tab-pane fade" id="content2">
+            <!-- Include content for Epoch 2 -->
+            <iframe src="epoch2.html" width="100%" height="800px" frameborder="0"></iframe>
+        </div>
+        <div class="tab-pane fade" id="content3">
+            <!-- Include content for Epoch 3 -->
+            <iframe src="epoch3.html" width="100%" height="800px" frameborder="0"></iframe>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
