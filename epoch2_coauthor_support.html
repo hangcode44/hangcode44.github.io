@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 2600px;
+                 background-color: #3A3B3C;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "white"}, "id": "CDC Biodiversit\u00e9", "label": "CDC Biodiversit\u00e9", "shape": "dot", "size": 10, "title": "CDC Biodiversit\u00e9", "value": 1, "x": 6997.802887803574, "y": -3131.112478561872}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ARCADIS", "label": "ARCADIS", "shape": "dot", "size": 10, "value": 0, "x": 7370.131619195732, "y": -3943.3843586045523}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Endangered Wildlife Trust", "label": "Endangered Wildlife Trust", "shape": "dot", "size": 10, "title": "Endangered Wildlife Trust", "value": 1, "x": 5467.580013409109, "y": -2433.975364394982}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Government of the Netherlands", "label": "Government of the Netherlands", "shape": "dot", "size": 10, "title": "Government of the Netherlands", "value": 1, "x": 6168.104012149746, "y": -2853.369518030437}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Pre Sustainability", "label": "Pre Sustainability", "shape": "dot", "size": 10, "title": "Pre Sustainability", "value": 2, "x": 8068.957516430294, "y": -180.2721389112059}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Actiam", "label": "Actiam", "shape": "dot", "size": 10, "value": 0, "x": 8751.015563969615, "y": 3558.9320943480125}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Inter-American Development Bank", "label": "Inter-American Development Bank", "shape": "dot", "size": 10, "title": "Inter-American Development Bank", "value": 1, "x": -5409.579920578192, "y": -4190.656163016789}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "UN Environment Programme", "label": "UN Environment Programme", "shape": "dot", "size": 10, "value": 0, "x": -6509.809530197893, "y": -4989.639876148979}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "World Business Council for Sustainable Development", "label": "World Business Council for Sustainable Development", "shape": "dot", "size": 10, "title": "World Business Council for Sustainable Development", "value": 1, "x": -1091.4198009948059, "y": 9685.103914690548}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "OECD", "label": "OECD", "shape": "dot", "size": 10, "value": 0, "x": -1777.7552906498395, "y": 10000.0}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "CREM", "label": "CREM", "shape": "dot", "size": 10, "title": "CREM", "value": 1, "x": 7516.230394108893, "y": 3633.8567431299275}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Norwegian University of Science and Technology", "label": "Norwegian University of Science and Technology", "shape": "dot", "size": 10, "title": "Norwegian University of Science and Technology", "value": 1, "x": -2476.6669106794966, "y": -6560.079190202877}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Global Canopy", "label": "Global Canopy", "shape": "dot", "size": 10, "value": 0, "x": -3065.8669929644116, "y": -7069.151532975311}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "PriceWaterhouseCoopers", "label": "PriceWaterhouseCoopers", "shape": "dot", "size": 10, "title": "PriceWaterhouseCoopers", "value": 1, "x": -2151.4417414499303, "y": -5259.753612900416}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "International Institute for Environment and Development ", "label": "International Institute for Environment and Development ", "shape": "dot", "size": 10, "title": "International Institute for Environment and Development ", "value": 1, "x": 8267.106816903184, "y": 5326.798186474791}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Cabinet of Ministers of the Kyrgyz Republic", "label": "Cabinet of Ministers of the Kyrgyz Republic", "shape": "dot", "size": 10, "value": 0, "x": 9579.507070110049, "y": 5942.120858413452}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Archipelago Consulting", "label": "Archipelago Consulting", "shape": "dot", "size": 10, "title": "Archipelago Consulting", "value": 1, "x": 4175.020103941905, "y": -4084.0233965855987}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Forest Stewardship Council", "label": "Forest Stewardship Council", "shape": "dot", "size": 10, "value": 0, "x": 4744.7598427453595, "y": -5128.146830771576}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Elcano Royal Institute", "label": "Elcano Royal Institute", "shape": "dot", "size": 10, "title": "Elcano Royal Institute", "value": 1, "x": -7847.621482762064, "y": -910.2599505882598}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "UN Department of Economic and Social Affairs", "label": "UN Department of Economic and Social Affairs", "shape": "dot", "size": 10, "value": 0, "x": -8773.617474422528, "y": -1201.40349914475}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "London School of Economics and Political Science", "label": "London School of Economics and Political Science", "shape": "dot", "size": 10, "title": "London School of Economics and Political Science", "value": 1, "x": -6491.040207963548, "y": 4265.788252422823}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Commission for Environmental Cooperation", "label": "Commission for Environmental Cooperation", "shape": "dot", "size": 10, "value": 0, "x": -7639.105553673538, "y": 5489.064729304144}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Queensland University of Technology", "label": "Queensland University of Technology", "shape": "dot", "size": 10, "title": "Queensland University of Technology", "value": 1, "x": -6071.067483600219, "y": 4820.391911983793}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Government of Germany", "label": "Government of Germany", "shape": "dot", "size": 10, "title": "Government of Germany", "value": 2, "x": -2893.617594086755, "y": -913.8981181203844}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Helmholtz Centre for Environmental Research", "label": "Helmholtz Centre for Environmental Research", "shape": "dot", "size": 10, "value": 0, "x": 449.54641147194843, "y": -6997.602554006389}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "UN Development Programme", "label": "UN Development Programme", "shape": "dot", "size": 10, "value": 0, "x": -6245.33728178414, "y": 5177.159398492637}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "KfW Development Bank", "label": "KfW Development Bank", "shape": "dot", "size": 10, "title": "KfW Development Bank", "value": 1, "x": 1176.9797909654258, "y": -6935.965017835949}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "European Union", "label": "European Union", "shape": "dot", "size": 10, "title": "European Union", "value": 1, "x": -5149.683548646171, "y": 4077.70490309326}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Government of Switzerland", "label": "Government of Switzerland", "shape": "dot", "size": 10, "title": "Government of Switzerland", "value": 1, "x": -5139.111228751306, "y": 4805.772608446942}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "CDC Biodiversit\u00e9", "label": "", "to": "ARCADIS", "width": 1}, {"arrows": "to", "from": "Endangered Wildlife Trust", "label": "", "to": "ARCADIS", "width": 1}, {"arrows": "to", "from": "Government of the Netherlands", "label": "", "to": "ARCADIS", "width": 1}, {"arrows": "to", "from": "Pre Sustainability", "label": "", "to": "ARCADIS", "width": 1}, {"arrows": "to", "from": "Pre Sustainability", "label": "", "to": "Actiam", "width": 1}, {"arrows": "to", "from": "Inter-American Development Bank", "label": "", "to": "UN Environment Programme", "width": 1}, {"arrows": "to", "from": "World Business Council for Sustainable Development", "label": "", "to": "OECD", "width": 1}, {"arrows": "to", "from": "CREM", "label": "", "to": "Actiam", "width": 1}, {"arrows": "to", "from": "Norwegian University of Science and Technology", "label": "", "to": "Global Canopy", "width": 1}, {"arrows": "to", "from": "PriceWaterhouseCoopers", "label": "", "to": "Global Canopy", "width": 1}, {"arrows": "to", "from": "International Institute for Environment and Development ", "label": "", "to": "Cabinet of Ministers of the Kyrgyz Republic", "width": 1}, {"arrows": "to", "from": "Archipelago Consulting", "label": "", "to": "Forest Stewardship Council", "width": 1}, {"arrows": "to", "from": "Elcano Royal Institute", "label": "", "to": "UN Department of Economic and Social Affairs", "width": 1}, {"arrows": "to", "from": "London School of Economics and Political Science", "label": "", "to": "Commission for Environmental Cooperation", "width": 1}, {"arrows": "to", "from": "Queensland University of Technology", "label": "", "to": "Commission for Environmental Cooperation", "width": 1}, {"arrows": "to", "from": "Government of Germany", "label": "", "to": "Helmholtz Centre for Environmental Research", "width": 1}, {"arrows": "to", "from": "Government of Germany", "label": "", "to": "UN Development Programme", "width": 1}, {"arrows": "to", "from": "KfW Development Bank", "label": "", "to": "Helmholtz Centre for Environmental Research", "width": 1}, {"arrows": "to", "from": "European Union", "label": "", "to": "UN Development Programme", "width": 1}, {"arrows": "to", "from": "Government of Switzerland", "label": "", "to": "UN Development Programme", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
