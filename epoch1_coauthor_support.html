@@ -6,6 +6,9 @@
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
             <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
             
+                <link href="lib/tom-select/tom-select.css" rel="stylesheet">
+                <script src="lib/tom-select/tom-select.complete.min.js"></script>
+            
         
 <center>
 <h1></h1>
@@ -52,6 +55,80 @@
     <body>
         <div class="card" style="width: 100%">
             
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="Government of Bulgaria">Government of Bulgaria</option>
+                                
+                                    <option value="OECD">OECD</option>
+                                
+                                    <option value="UN Environment Programme">UN Environment Programme</option>
+                                
+                                    <option value="Government of Poland">Government of Poland</option>
+                                
+                                    <option value="Warsaw University">Warsaw University</option>
+                                
+                                    <option value="World Bank">World Bank</option>
+                                
+                                    <option value="Government of Norway">Government of Norway</option>
+                                
+                                    <option value="Government of the Netherlands">Government of the Netherlands</option>
+                                
+                                    <option value="Government of the United Kingdom">Government of the United Kingdom</option>
+                                
+                                    <option value="European Commission">European Commission</option>
+                                
+                                    <option value="European Environment Agency">European Environment Agency</option>
+                                
+                                    <option value="Government of Germany">Government of Germany</option>
+                                
+                                    <option value="Helmholtz Centre for Environmental Research">Helmholtz Centre for Environmental Research</option>
+                                
+                                    <option value="Government of India">Government of India</option>
+                                
+                                    <option value="Institute for European Environmental Policy">Institute for European Environmental Policy</option>
+                                
+                                    <option value="UN Convention on Biological Diversity ">UN Convention on Biological Diversity </option>
+                                
+                                    <option value="UN Educational, Scientific and Cultural Organization">UN Educational, Scientific and Cultural Organization</option>
+                                
+                                    <option value="WWF">WWF</option>
+                                
+                                    <option value="International Union for Conservation of Nature">International Union for Conservation of Nature</option>
+                                
+                                    <option value="The Allen Consulting Group">The Allen Consulting Group</option>
+                                
+                                    <option value="Government of Australia">Government of Australia</option>
+                                
+                                    <option value="Inter-American Development Bank">Inter-American Development Bank</option>
+                                
+                                    <option value="Defenders of Wildlife">Defenders of Wildlife</option>
+                                
+                                    <option value="NGO - conservation">NGO - conservation</option>
+                                
+                                    <option value="government">government</option>
+                                
+                                    <option value="inter-governmental organization">inter-governmental organization</option>
+                                
+                                    <option value="university, research centre, or think tank">university, research centre, or think tank</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
             
             <div id="mynetwork" class="card-body"></div>
         </div>
@@ -78,6 +155,14 @@
               };
 
               
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
 
               
 
@@ -88,7 +173,7 @@
                   
 
                   // parsing and collecting nodes and edges from the python
-                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "white"}, "id": "Government of Bulgaria", "label": "Government of Bulgaria", "shape": "dot", "size": 10, "title": "Government of Bulgaria", "value": 1, "x": 4461.628989621502, "y": 5329.672851768239}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "OECD", "label": "OECD", "shape": "dot", "size": 10, "title": "OECD", "value": 4, "x": 915.7805270254825, "y": 2641.292911632977}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "UN Environment Programme", "label": "UN Environment Programme", "shape": "dot", "size": 10, "value": 1, "x": 2447.059661533388, "y": 9155.884680429916}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Government of Poland", "label": "Government of Poland", "shape": "dot", "size": 10, "title": "Government of Poland", "value": 1, "x": -3124.6899669777417, "y": -5980.165362736414}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Warsaw University", "label": "Warsaw University", "shape": "dot", "size": 10, "title": "Warsaw University", "value": 1, "x": 2393.4425272017206, "y": -9128.95622028241}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "World Bank", "label": "World Bank", "shape": "dot", "size": 10, "title": "World Bank", "value": 2, "x": -6773.061532419982, "y": -4119.355718316379}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Government of Norway", "label": "Government of Norway", "shape": "dot", "size": 10, "title": "Government of Norway", "value": 1, "x": -5557.05598972697, "y": -7395.673972934343}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Government of the Netherlands", "label": "Government of the Netherlands", "shape": "dot", "size": 10, "title": "Government of the Netherlands", "value": 1, "x": -7990.869513131581, "y": -1228.2755609706237}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Government of the United Kingdom", "label": "Government of the United Kingdom", "shape": "dot", "size": 10, "title": "Government of the United Kingdom", "value": 2, "x": 82.60662936653928, "y": -2681.536820687415}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "European Commission", "label": "European Commission", "shape": "dot", "size": 10, "title": "European Commission", "value": 1, "x": -5688.012096177895, "y": 8481.908210704245}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "European Environment Agency", "label": "European Environment Agency", "shape": "dot", "size": 10, "title": "European Environment Agency", "value": 1, "x": -1558.5097461306943, "y": -7958.935001784487}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Government of Germany", "label": "Government of Germany", "shape": "dot", "size": 10, "title": "Government of Germany", "value": 1, "x": 2735.1807837464357, "y": -5822.186797079697}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Helmholtz Centre for Environmental Research", "label": "Helmholtz Centre for Environmental Research", "shape": "dot", "size": 10, "title": "Helmholtz Centre for Environmental Research", "value": 1, "x": 6702.9192728110775, "y": 3310.3316705648963}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Government of India", "label": "Government of India", "shape": "dot", "size": 10, "title": "Government of India", "value": 1, "x": -4337.5020788298125, "y": 3528.2293097866004}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Institute for European Environmental Policy", "label": "Institute for European Environmental Policy", "shape": "dot", "size": 10, "title": "Institute for European Environmental Policy", "value": 1, "x": 7877.001122712445, "y": 841.9286060151152}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "UN Convention on Biological Diversity ", "label": "UN Convention on Biological Diversity ", "shape": "dot", "size": 10, "title": "UN Convention on Biological Diversity ", "value": 1, "x": 10000.0, "y": 4126.364211267103}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "UN Educational, Scientific and Cultural Organization", "label": "UN Educational, Scientific and Cultural Organization", "shape": "dot", "size": 10, "title": "UN Educational, Scientific and Cultural Organization", "value": 1, "x": -2585.91859062393, "y": 6899.473002622664}]);
+                  nodes = new vis.DataSet([{"color": "#66c2a5", "font": {"color": "white"}, "id": "Government of Bulgaria", "label": "Government of Bulgaria", "shape": "dot", "size": 10, "title": "Government of Bulgaria", "value": 1, "x": -450.11072794081383, "y": 699.1085789589622}, {"color": "#8da0cb", "font": {"color": "white"}, "id": "OECD", "label": "OECD", "shape": "dot", "size": 10, "title": "OECD", "value": 4, "x": -1932.5384043151414, "y": 166.20546062773406}, {"color": "#8da0cb", "font": {"color": "white"}, "id": "UN Environment Programme", "label": "UN Environment Programme", "shape": "dot", "size": 10, "value": 1, "x": -3206.2904368524078, "y": 127.61506067918789}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "Government of Poland", "label": "Government of Poland", "shape": "dot", "size": 10, "title": "Government of Poland", "value": 1, "x": -922.2715864122828, "y": -809.9793791632115}, {"color": "#e78ac3", "font": {"color": "white"}, "id": "Warsaw University", "label": "Warsaw University", "shape": "dot", "size": 10, "title": "Warsaw University", "value": 1, "x": -697.3078617305314, "y": -324.62105402951175}, {"color": "#FFFFFF", "font": {"color": "white"}, "id": "World Bank", "label": "World Bank", "shape": "dot", "size": 10, "title": "World Bank", "value": 2, "x": -223.9069087856258, "y": 137.4675864509185}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "Government of Norway", "label": "Government of Norway", "shape": "dot", "size": 10, "title": "Government of Norway", "value": 1, "x": -2373.695785768474, "y": -639.4267201515008}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "Government of the Netherlands", "label": "Government of the Netherlands", "shape": "dot", "size": 10, "title": "Government of the Netherlands", "value": 1, "x": -1101.094267074286, "y": 1253.456204275256}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "Government of the United Kingdom", "label": "Government of the United Kingdom", "shape": "dot", "size": 10, "title": "Government of the United Kingdom", "value": 2, "x": -1075.6549600903486, "y": 252.7877165340178}, {"color": "#FFFFFF", "font": {"color": "white"}, "id": "European Commission", "label": "European Commission", "shape": "dot", "size": 10, "title": "European Commission", "value": 1, "x": -2383.931266212647, "y": 1125.6425423312471}, {"color": "#8da0cb", "font": {"color": "white"}, "id": "European Environment Agency", "label": "European Environment Agency", "shape": "dot", "size": 10, "title": "European Environment Agency", "value": 1, "x": -3073.1402234491625, "y": 997.1257859228107}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "Government of Germany", "label": "Government of Germany", "shape": "dot", "size": 10, "title": "Government of Germany", "value": 1, "x": -2081.1924790972666, "y": 738.653014124835}, {"color": "#e78ac3", "font": {"color": "white"}, "id": "Helmholtz Centre for Environmental Research", "label": "Helmholtz Centre for Environmental Research", "shape": "dot", "size": 10, "title": "Helmholtz Centre for Environmental Research", "value": 1, "x": -1506.9714771165247, "y": 75.32560747926844}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "Government of India", "label": "Government of India", "shape": "dot", "size": 10, "title": "Government of India", "value": 1, "x": -1634.325698904369, "y": -442.4055641929465}, {"color": "#e78ac3", "font": {"color": "white"}, "id": "Institute for European Environmental Policy", "label": "Institute for European Environmental Policy", "shape": "dot", "size": 10, "title": "Institute for European Environmental Policy", "value": 1, "x": -1365.3835361441095, "y": 714.8979641906575}, {"color": "#FFFFFF", "font": {"color": "white"}, "id": "UN Convention on Biological Diversity ", "label": "UN Convention on Biological Diversity ", "shape": "dot", "size": 10, "title": "UN Convention on Biological Diversity ", "value": 1, "x": -3212.879630021618, "y": -750.0994979488758}, {"color": "#8da0cb", "font": {"color": "white"}, "id": "UN Educational, Scientific and Cultural Organization", "label": "UN Educational, Scientific and Cultural Organization", "shape": "dot", "size": 10, "title": "UN Educational, Scientific and Cultural Organization", "value": 1, "x": -2033.2259768517538, "y": -841.7607935492324}, {"color": "#fc8d62", "font": {"color": "white"}, "id": "WWF", "label": "WWF", "shape": "dot", "size": 10, "title": "WWF", "value": 2, "x": 10000.0, "y": 85.39971921732135}, {"color": "#fc8d62", "font": {"color": "white"}, "id": "International Union for Conservation of Nature", "label": "International Union for Conservation of Nature", "shape": "dot", "size": 10, "title": "International Union for Conservation of Nature", "value": 4, "x": 7082.298264050041, "y": -4325.625280186615}, {"color": "#FFFFFF", "font": {"color": "white"}, "id": "The Allen Consulting Group", "label": "The Allen Consulting Group", "shape": "dot", "size": 10, "title": "The Allen Consulting Group", "value": 1, "x": 1405.1369335143088, "y": 5613.225428923406}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "Government of Australia", "label": "Government of Australia", "shape": "dot", "size": 10, "title": "Government of Australia", "value": 1, "x": 1876.1132851227837, "y": -5349.203946135273}, {"color": "#FFFFFF", "font": {"color": "white"}, "id": "Inter-American Development Bank", "label": "Inter-American Development Bank", "shape": "dot", "size": 10, "title": "Inter-American Development Bank", "value": 1, "x": 4113.117779008304, "y": 6893.3131491403055}, {"color": "#fc8d62", "font": {"color": "white"}, "id": "Defenders of Wildlife", "label": "Defenders of Wildlife", "shape": "dot", "size": 10, "title": "Defenders of Wildlife", "value": 1, "x": 4797.25496507192, "y": -5397.101583498761}, {"color": "#fc8d62", "font": {"color": "white"}, "id": "NGO - conservation", "label": "NGO - conservation", "physics": false, "shape": "box", "x": 0, "y": 0}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "government", "label": "government", "physics": false, "shape": "box", "x": 0, "y": -30}, {"color": "#8da0cb", "font": {"color": "white"}, "id": "inter-governmental organization", "label": "inter-governmental organization", "physics": false, "shape": "box", "x": 0, "y": -60}, {"color": "#e78ac3", "font": {"color": "white"}, "id": "university, research centre, or think tank", "label": "university, research centre, or think tank", "physics": false, "shape": "box", "x": 0, "y": -90}]);
                   edges = new vis.DataSet([{"arrows": "to", "from": "Government of Bulgaria", "label": "", "to": "OECD", "width": 1}, {"arrows": "to", "from": "OECD", "label": "", "to": "UN Environment Programme", "width": 1}, {"arrows": "to", "from": "Government of Poland", "label": "", "to": "OECD", "width": 1}, {"arrows": "to", "from": "Warsaw University", "label": "", "to": "OECD", "width": 1}, {"arrows": "to", "from": "World Bank", "label": "", "to": "OECD", "width": 1}, {"arrows": "to", "from": "Government of Norway", "label": "", "to": "OECD", "width": 1}, {"arrows": "to", "from": "Government of the Netherlands", "label": "", "to": "OECD", "width": 1}, {"arrows": "to", "from": "Government of the United Kingdom", "label": "", "to": "OECD", "width": 1}, {"arrows": "to", "from": "Government of the United Kingdom", "label": "", "to": "UN Environment Programme", "width": 1}, {"arrows": "to", "from": "European Commission", "label": "", "to": "UN Environment Programme", "width": 1}, {"arrows": "to", "from": "European Environment Agency", "label": "", "to": "UN Environment Programme", "width": 1}, {"arrows": "to", "from": "Government of Germany", "label": "", "to": "UN Environment Programme", "width": 1}, {"arrows": "to", "from": "Helmholtz Centre for Environmental Research", "label": "", "to": "UN Environment Programme", "width": 1}, {"arrows": "to", "from": "Government of India", "label": "", "to": "UN Environment Programme", "width": 1}, {"arrows": "to", "from": "Institute for European Environmental Policy", "label": "", "to": "UN Environment Programme", "width": 1}, {"arrows": "to", "from": "UN Convention on Biological Diversity ", "label": "", "to": "UN Environment Programme", "width": 1}, {"arrows": "to", "from": "UN Educational, Scientific and Cultural Organization", "label": "", "to": "UN Environment Programme", "width": 1}]);
 
                   nodeColors = {};
@@ -148,6 +233,8 @@
 
                   
 
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
                   
 
                   
