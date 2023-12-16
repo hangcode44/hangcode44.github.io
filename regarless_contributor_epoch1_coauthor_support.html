@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 2600px;
+                 background-color: #3A3B3C;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#FFFFFF", "font": {"color": "white"}, "id": "ALCOA Foundation", "label": "ALCOA Foundation", "shape": "dot", "size": 10, "title": "ALCOA Foundation", "value": 1, "x": -2240.1274912122785, "y": 6569.875534298471}, {"color": "#e78ac3", "font": {"color": "white"}, "id": "Alterra Wageningen UR", "label": "Alterra Wageningen UR", "shape": "dot", "size": 10, "title": "Alterra Wageningen UR", "value": 1, "x": -2693.3192070461428, "y": 7257.154999241692}, {"color": "#fc8d62", "font": {"color": "white"}, "id": "Business and Biodiversity Offsets Programme", "label": "Business and Biodiversity Offsets Programme", "shape": "dot", "size": 10, "title": "Business and Biodiversity Offsets Programme", "value": 2, "x": -2229.8369856977597, "y": 7370.5070404846765}, {"color": "#fc8d62", "font": {"color": "white"}, "id": "Foundation for Sustainable Development", "label": "Foundation for Sustainable Development", "shape": "dot", "size": 10, "title": "Foundation for Sustainable Development", "value": 1, "x": -2703.585463012884, "y": 6788.664377308399}, {"color": "#fc8d62", "font": {"color": "white"}, "id": "International Union for Conservation of Nature", "label": "International Union for Conservation of Nature", "shape": "dot", "size": 10, "title": "International Union for Conservation of Nature", "value": 4, "x": -1976.3679160928396, "y": 7006.352791290119}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "Bulgarian National Trust Ecofund", "label": "Bulgarian National Trust Ecofund", "shape": "dot", "size": 10, "title": "Bulgarian National Trust Ecofund", "value": 1, "x": 1943.6171787542544, "y": -3353.784115686818}, {"color": "#8da0cb", "font": {"color": "white"}, "id": "OECD", "label": "OECD", "shape": "dot", "size": 10, "title": "OECD", "value": 4, "x": 1716.302324477951, "y": -2030.436050967673}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "Polish Ministry of Environment", "label": "Polish Ministry of Environment", "shape": "dot", "size": 10, "title": "Polish Ministry of Environment", "value": 1, "x": 2381.950737129111, "y": -3432.6043599212153}, {"color": "#e78ac3", "font": {"color": "white"}, "id": "Warsaw University", "label": "Warsaw University", "shape": "dot", "size": 10, "title": "Warsaw University", "value": 1, "x": 2573.0987517206654, "y": -3040.1028504719798}, {"color": "#FFFFFF", "font": {"color": "white"}, "id": "World Bank Group", "label": "World Bank Group", "shape": "dot", "size": 10, "title": "World Bank Group", "value": 2, "x": 2706.534464289603, "y": -1456.121849339135}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "Government of Norway", "label": "Government of Norway", "shape": "dot", "size": 10, "title": "Government of Norway", "value": 1, "x": 2921.2819368033643, "y": -2049.8813886279627}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "Government of the Netherlands", "label": "Government of the Netherlands", "shape": "dot", "size": 10, "title": "Government of the Netherlands", "value": 1, "x": 3073.3522397251713, "y": -1362.5481921426306}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "Government of the United Kingdom", "label": "Government of the United Kingdom", "shape": "dot", "size": 10, "title": "Government of the United Kingdom", "value": 1, "x": 3218.941719080977, "y": -1805.4303077504915}, {"color": "#FFFFFF", "font": {"color": "white"}, "id": "European Commission", "label": "European Commission", "shape": "dot", "size": 10, "title": "European Commission", "value": 1, "x": 568.4000705208382, "y": -1682.6770652821122}, {"color": "#8da0cb", "font": {"color": "white"}, "id": "European Environment Agency", "label": "European Environment Agency", "shape": "dot", "size": 10, "title": "European Environment Agency", "value": 1, "x": 951.6658266904676, "y": -1289.4913449457188}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "German Federal Ministry for the Environment, Nature Conservation, Building and Nuclear Safety", "label": "German Federal Ministry for the Environment, Nature Conservation, Building and Nuclear Safety", "shape": "dot", "size": 10, "title": "German Federal Ministry for the Environment, Nature Conservation, Building and Nuclear Safety", "value": 1, "x": 356.7232560287269, "y": -1911.1290667124904}, {"color": "#e78ac3", "font": {"color": "white"}, "id": "Helmholtz Centre for Environmental Research", "label": "Helmholtz Centre for Environmental Research", "shape": "dot", "size": 10, "title": "Helmholtz Centre for Environmental Research", "value": 1, "x": 797.6831967804537, "y": -2218.6345099672476}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "Indian Institute of Forest Management", "label": "Indian Institute of Forest Management", "shape": "dot", "size": 10, "title": "Indian Institute of Forest Management", "value": 1, "x": 1021.6572579990831, "y": -1743.2487695971622}, {"color": "#e78ac3", "font": {"color": "white"}, "id": "Institute for European Environmental Policy", "label": "Institute for European Environmental Policy", "shape": "dot", "size": 10, "title": "Institute for European Environmental Policy", "value": 1, "x": 420.64644246711003, "y": -1465.6493030351153}, {"color": "#FFFFFF", "font": {"color": "white"}, "id": "Secretariat of the Convention on Biological Diversity", "label": "Secretariat of the Convention on Biological Diversity", "shape": "dot", "size": 10, "title": "Secretariat of the Convention on Biological Diversity", "value": 1, "x": 690.2626547148299, "y": -1348.5260565412918}, {"color": "#8da0cb", "font": {"color": "white"}, "id": "The Economics of Ecosystems and Biodiversity", "label": "The Economics of Ecosystems and Biodiversity", "shape": "dot", "size": 10, "title": "The Economics of Ecosystems and Biodiversity", "value": 1, "x": 603.0628150433753, "y": -2030.2852542185083}, {"color": "#8da0cb", "font": {"color": "white"}, "id": "UN ESCO", "label": "UN ESCO", "shape": "dot", "size": 10, "title": "UN ESCO", "value": 1, "x": 1005.5992057070175, "y": -2002.3255910355615}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "United Kingdom Department for Environment, Food, and Rural Affairs", "label": "United Kingdom Department for Environment, Food, and Rural Affairs", "shape": "dot", "size": 10, "title": "United Kingdom Department for Environment, Food, and Rural Affairs", "value": 1, "x": 1155.0600678093085, "y": -1501.1575356621804}, {"color": "#8da0cb", "font": {"color": "white"}, "id": "UN Department of Economic and Social Affairs", "label": "UN Department of Economic and Social Affairs", "shape": "dot", "size": 10, "title": "UN Department of Economic and Social Affairs", "value": 1, "x": -8894.371621092168, "y": 2281.944801376175}, {"color": "#8da0cb", "font": {"color": "white"}, "id": "United Nations", "label": "United Nations", "shape": "dot", "size": 10, "title": "United Nations", "value": 1, "x": -8041.152237437323, "y": 2076.7767465690963}, {"color": "#fc8d62", "font": {"color": "white"}, "id": "WWF", "label": "WWF", "shape": "dot", "size": 10, "title": "WWF", "value": 2, "x": -6683.374576297911, "y": -7704.248473691872}, {"color": "#FFFFFF", "font": {"color": "white"}, "id": "The Allen Consulting Group", "label": "The Allen Consulting Group", "shape": "dot", "size": 10, "title": "The Allen Consulting Group", "value": 1, "x": 4453.7054462970145, "y": -10000.0}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "Government of Australia", "label": "Government of Australia", "shape": "dot", "size": 10, "title": "Government of Australia", "value": 1, "x": 2754.3569099909705, "y": 9213.406090215092}, {"color": "#FFFFFF", "font": {"color": "white"}, "id": "Inter-American Development Bank", "label": "Inter-American Development Bank", "shape": "dot", "size": 10, "title": "Inter-American Development Bank", "value": 1, "x": -7272.477287365924, "y": -1148.2949416669178}, {"color": "#fc8d62", "font": {"color": "white"}, "id": "Defenders of Wildlife", "label": "Defenders of Wildlife", "shape": "dot", "size": 10, "title": "Defenders of Wildlife", "value": 1, "x": 7420.710283224933, "y": 6011.894646480357}, {"color": "#fc8d62", "font": {"color": "white"}, "id": "NGO - conservation", "label": "NGO - conservation", "physics": false, "shape": "box", "widthConstraint": 200, "x": 1200, "y": -500}, {"color": "#66c2a5", "font": {"color": "white"}, "id": "government", "label": "government", "physics": false, "shape": "box", "widthConstraint": 200, "x": 1200, "y": -550}, {"color": "#8da0cb", "font": {"color": "white"}, "id": "inter-governmental organization", "label": "inter-governmental organization", "physics": false, "shape": "box", "widthConstraint": 200, "x": 1200, "y": -600}, {"color": "#e78ac3", "font": {"color": "white"}, "id": "university, research centre, or think tank", "label": "university, research centre, or think tank", "physics": false, "shape": "box", "widthConstraint": 200, "x": 1200, "y": -650}]);
+                  edges = new vis.DataSet([{"from": "ALCOA Foundation", "label": "", "to": "Alterra Wageningen UR", "width": 1}, {"from": "ALCOA Foundation", "label": "", "to": "Business and Biodiversity Offsets Programme", "width": 1}, {"from": "ALCOA Foundation", "label": "", "to": "Foundation for Sustainable Development", "width": 1}, {"from": "ALCOA Foundation", "label": "", "to": "International Union for Conservation of Nature", "width": 1}, {"from": "Alterra Wageningen UR", "label": "", "to": "Business and Biodiversity Offsets Programme", "width": 1}, {"from": "Alterra Wageningen UR", "label": "", "to": "Foundation for Sustainable Development", "width": 1}, {"from": "Alterra Wageningen UR", "label": "", "to": "International Union for Conservation of Nature", "width": 1}, {"from": "Business and Biodiversity Offsets Programme", "label": "", "to": "Foundation for Sustainable Development", "width": 1}, {"from": "Business and Biodiversity Offsets Programme", "label": "", "to": "International Union for Conservation of Nature", "width": 1}, {"from": "Foundation for Sustainable Development", "label": "", "to": "International Union for Conservation of Nature", "width": 1}, {"from": "Bulgarian National Trust Ecofund", "label": "", "to": "OECD", "width": 1}, {"from": "Bulgarian National Trust Ecofund", "label": "", "to": "Polish Ministry of Environment", "width": 1}, {"from": "Bulgarian National Trust Ecofund", "label": "", "to": "Warsaw University", "width": 1}, {"from": "OECD", "label": "", "to": "Polish Ministry of Environment", "width": 1}, {"from": "OECD", "label": "", "to": "Warsaw University", "width": 1}, {"from": "OECD", "label": "", "to": "World Bank Group", "width": 1}, {"from": "OECD", "label": "", "to": "Government of Norway", "width": 1}, {"from": "OECD", "label": "", "to": "Government of the Netherlands", "width": 1}, {"from": "OECD", "label": "", "to": "Government of the United Kingdom", "width": 1}, {"from": "OECD", "label": "", "to": "European Commission", "width": 1}, {"from": "OECD", "label": "", "to": "European Environment Agency", "width": 1}, {"from": "OECD", "label": "", "to": "German Federal Ministry for the Environment, Nature Conservation, Building and Nuclear Safety", "width": 1}, {"from": "OECD", "label": "", "to": "Helmholtz Centre for Environmental Research", "width": 1}, {"from": "OECD", "label": "", "to": "Indian Institute of Forest Management", "width": 1}, {"from": "OECD", "label": "", "to": "Institute for European Environmental Policy", "width": 1}, {"from": "OECD", "label": "", "to": "Secretariat of the Convention on Biological Diversity", "width": 1}, {"from": "OECD", "label": "", "to": "The Economics of Ecosystems and Biodiversity", "width": 1}, {"from": "OECD", "label": "", "to": "UN ESCO", "width": 1}, {"from": "OECD", "label": "", "to": "United Kingdom Department for Environment, Food, and Rural Affairs", "width": 1}, {"from": "Polish Ministry of Environment", "label": "", "to": "Warsaw University", "width": 1}, {"from": "World Bank Group", "label": "", "to": "Government of Norway", "width": 1}, {"from": "World Bank Group", "label": "", "to": "Government of the Netherlands", "width": 1}, {"from": "World Bank Group", "label": "", "to": "Government of the United Kingdom", "width": 1}, {"from": "Government of Norway", "label": "", "to": "Government of the Netherlands", "width": 1}, {"from": "Government of Norway", "label": "", "to": "Government of the United Kingdom", "width": 1}, {"from": "Government of the Netherlands", "label": "", "to": "Government of the United Kingdom", "width": 1}, {"from": "UN Department of Economic and Social Affairs", "label": "", "to": "United Nations", "width": 1}, {"from": "European Commission", "label": "", "to": "European Environment Agency", "width": 1}, {"from": "European Commission", "label": "", "to": "German Federal Ministry for the Environment, Nature Conservation, Building and Nuclear Safety", "width": 1}, {"from": "European Commission", "label": "", "to": "Helmholtz Centre for Environmental Research", "width": 1}, {"from": "European Commission", "label": "", "to": "Indian Institute of Forest Management", "width": 1}, {"from": "European Commission", "label": "", "to": "Institute for European Environmental Policy", "width": 1}, {"from": "European Commission", "label": "", "to": "Secretariat of the Convention on Biological Diversity", "width": 1}, {"from": "European Commission", "label": "", "to": "The Economics of Ecosystems and Biodiversity", "width": 1}, {"from": "European Commission", "label": "", "to": "UN ESCO", "width": 1}, {"from": "European Commission", "label": "", "to": "United Kingdom Department for Environment, Food, and Rural Affairs", "width": 1}, {"from": "European Environment Agency", "label": "", "to": "German Federal Ministry for the Environment, Nature Conservation, Building and Nuclear Safety", "width": 1}, {"from": "European Environment Agency", "label": "", "to": "Helmholtz Centre for Environmental Research", "width": 1}, {"from": "European Environment Agency", "label": "", "to": "Indian Institute of Forest Management", "width": 1}, {"from": "European Environment Agency", "label": "", "to": "Institute for European Environmental Policy", "width": 1}, {"from": "European Environment Agency", "label": "", "to": "Secretariat of the Convention on Biological Diversity", "width": 1}, {"from": "European Environment Agency", "label": "", "to": "The Economics of Ecosystems and Biodiversity", "width": 1}, {"from": "European Environment Agency", "label": "", "to": "UN ESCO", "width": 1}, {"from": "European Environment Agency", "label": "", "to": "United Kingdom Department for Environment, Food, and Rural Affairs", "width": 1}, {"from": "German Federal Ministry for the Environment, Nature Conservation, Building and Nuclear Safety", "label": "", "to": "Helmholtz Centre for Environmental Research", "width": 1}, {"from": "German Federal Ministry for the Environment, Nature Conservation, Building and Nuclear Safety", "label": "", "to": "Indian Institute of Forest Management", "width": 1}, {"from": "German Federal Ministry for the Environment, Nature Conservation, Building and Nuclear Safety", "label": "", "to": "Institute for European Environmental Policy", "width": 1}, {"from": "German Federal Ministry for the Environment, Nature Conservation, Building and Nuclear Safety", "label": "", "to": "Secretariat of the Convention on Biological Diversity", "width": 1}, {"from": "German Federal Ministry for the Environment, Nature Conservation, Building and Nuclear Safety", "label": "", "to": "The Economics of Ecosystems and Biodiversity", "width": 1}, {"from": "German Federal Ministry for the Environment, Nature Conservation, Building and Nuclear Safety", "label": "", "to": "UN ESCO", "width": 1}, {"from": "German Federal Ministry for the Environment, Nature Conservation, Building and Nuclear Safety", "label": "", "to": "United Kingdom Department for Environment, Food, and Rural Affairs", "width": 1}, {"from": "Helmholtz Centre for Environmental Research", "label": "", "to": "Indian Institute of Forest Management", "width": 1}, {"from": "Helmholtz Centre for Environmental Research", "label": "", "to": "Institute for European Environmental Policy", "width": 1}, {"from": "Helmholtz Centre for Environmental Research", "label": "", "to": "Secretariat of the Convention on Biological Diversity", "width": 1}, {"from": "Helmholtz Centre for Environmental Research", "label": "", "to": "The Economics of Ecosystems and Biodiversity", "width": 1}, {"from": "Helmholtz Centre for Environmental Research", "label": "", "to": "UN ESCO", "width": 1}, {"from": "Helmholtz Centre for Environmental Research", "label": "", "to": "United Kingdom Department for Environment, Food, and Rural Affairs", "width": 1}, {"from": "Indian Institute of Forest Management", "label": "", "to": "Institute for European Environmental Policy", "width": 1}, {"from": "Indian Institute of Forest Management", "label": "", "to": "Secretariat of the Convention on Biological Diversity", "width": 1}, {"from": "Indian Institute of Forest Management", "label": "", "to": "The Economics of Ecosystems and Biodiversity", "width": 1}, {"from": "Indian Institute of Forest Management", "label": "", "to": "UN ESCO", "width": 1}, {"from": "Indian Institute of Forest Management", "label": "", "to": "United Kingdom Department for Environment, Food, and Rural Affairs", "width": 1}, {"from": "Institute for European Environmental Policy", "label": "", "to": "Secretariat of the Convention on Biological Diversity", "width": 1}, {"from": "Institute for European Environmental Policy", "label": "", "to": "The Economics of Ecosystems and Biodiversity", "width": 1}, {"from": "Institute for European Environmental Policy", "label": "", "to": "UN ESCO", "width": 1}, {"from": "Institute for European Environmental Policy", "label": "", "to": "United Kingdom Department for Environment, Food, and Rural Affairs", "width": 1}, {"from": "Secretariat of the Convention on Biological Diversity", "label": "", "to": "The Economics of Ecosystems and Biodiversity", "width": 1}, {"from": "Secretariat of the Convention on Biological Diversity", "label": "", "to": "UN ESCO", "width": 1}, {"from": "Secretariat of the Convention on Biological Diversity", "label": "", "to": "United Kingdom Department for Environment, Food, and Rural Affairs", "width": 1}, {"from": "The Economics of Ecosystems and Biodiversity", "label": "", "to": "UN ESCO", "width": 1}, {"from": "The Economics of Ecosystems and Biodiversity", "label": "", "to": "United Kingdom Department for Environment, Food, and Rural Affairs", "width": 1}, {"from": "UN ESCO", "label": "", "to": "United Kingdom Department for Environment, Food, and Rural Affairs", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

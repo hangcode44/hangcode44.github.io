@@ -19,72 +19,181 @@
 
 <div class="container mt-5">
     <ul class="nav nav-tabs" id="mainTabs">
+        <!-- Regardless Relationship Tab -->
         <li class="nav-item">
-            <a class="nav-link active" id="contributorTab" data-bs-toggle="tab" href="#contributorContent">Contributor</a>
+            <a class="nav-link active" id="regardlessTab" data-bs-toggle="tab" href="#regardlessContent">Regardless Relationship</a>
         </li>
+        <!-- Relationship Tab -->
         <li class="nav-item">
-            <a class="nav-link" id="consolidatedTab" data-bs-toggle="tab" href="#consolidatedContent">Consolidated Contributor</a>
+            <a class="nav-link" id="relationshipTab" data-bs-toggle="tab" href="#relationshipContent">Relationship</a>
         </li>
     </ul>
 
     <div class="tab-content mt-2">
-        <div class="tab-pane fade show active" id="contributorContent">
-            <ul class="nav nav-tabs" id="contributorEpochTabs">
+        <!-- Regardless Relationship Content -->
+        <div class="tab-pane fade show active" id="regardlessContent">
+            <ul class="nav nav-tabs" id="regardlessContributorTabs">
+                <!-- Regardless Contributors Tab -->
                 <li class="nav-item">
-                    <a class="nav-link active" id="epoch1Tab" data-bs-toggle="tab" href="#epoch1Content">Epoch 1</a>
+                    <a class="nav-link active" id="regardlessContributorsTab" data-bs-toggle="tab" href="#regardlessContributorsContent">Contributors</a>
                 </li>
+                <!-- Regardless Consolidated Contributors Tab -->
                 <li class="nav-item">
-                    <a class="nav-link" id="epoch2Tab" data-bs-toggle="tab" href="#epoch2Content">Epoch 2</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="epoch3Tab" data-bs-toggle="tab" href="#epoch3Content">Epoch 3</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="allTab" data-bs-toggle="tab" href="#allContent">All</a>
+                    <a class="nav-link" id="regardlessConsolidatedTab" data-bs-toggle="tab" href="#regardlessConsolidatedContent">Consolidated Contributors</a>
                 </li>
             </ul>
             <div class="tab-content mt-2">
-                <div class="tab-pane fade show active" id="epoch1Content">
-                    <iframe src="contributor_epoch1_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                <!-- Regardless Contributors Content -->
+                <div class="tab-pane fade show active" id="regardlessContributorsContent">
+                    <!-- Subtabs for Regardless Contributors -->
+                    <ul class="nav nav-tabs" id="regardlessContributorsEpochTabs">
+                        <li class="nav-item">
+                            <a class="nav-link" id="regardlessContributorsEpoch1Tab" data-bs-toggle="tab" href="#regardlessContributorsEpoch1Content">Epoch 1</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="regardlessContributorsEpoch2Tab" data-bs-toggle="tab" href="#regardlessContributorsEpoch2Content">Epoch 2</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="regardlessContributorsEpoch3Tab" data-bs-toggle="tab" href="#regardlessContributorsEpoch3Content">Epoch 3</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="regardlessContributorsAllTab" data-bs-toggle="tab" href="#regardlessContributorsAllContent">All</a>
+                        </li>
+                    </ul>
+                    <!-- Subtabs Content for Regardless Contributors -->
+                    <div class="tab-content mt-2">
+                        <!-- Update the src attribute with the correct file names -->
+                        <div class="tab-pane fade" id="regardlessContributorsEpoch1Content">
+                            <iframe src="regarless_contributor_epoch1_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="regardlessContributorsEpoch2Content">
+                            <iframe src="regarless_contributor_epoch2_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="regardlessContributorsEpoch3Content">
+                            <iframe src="regarless_contributor_epoch3_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="regardlessContributorsAllContent">
+                            <iframe src="regarless_contributor_all_epoch_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="epoch2Content">
-                    <iframe src="contributor_epoch2_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
-                </div>
-                <div class="tab-pane fade" id="epoch3Content">
-                    <iframe src="contributor_epoch3_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
-                </div>
-                <div class="tab-pane fade" id="allContent">
-                    <iframe src="contributor_all_epoch_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                <!-- Regardless Consolidated Contributors Content -->
+                <div class="tab-pane fade" id="regardlessConsolidatedContent">
+                    <!-- Subtabs for Regardless Consolidated Contributors -->
+                    <ul class="nav nav-tabs" id="regardlessConsolidatedEpochTabs">
+                        <li class="nav-item">
+                            <a class="nav-link" id="regardlessConsolidatedEpoch1Tab" data-bs-toggle="tab" href="#regardlessConsolidatedEpoch1Content">Epoch 1</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="regardlessConsolidatedEpoch2Tab" data-bs-toggle="tab" href="#regardlessConsolidatedEpoch2Content">Epoch 2</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="regardlessConsolidatedEpoch3Tab" data-bs-toggle="tab" href="#regardlessConsolidatedEpoch3Content">Epoch 3</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="regardlessConsolidatedAllTab" data-bs-toggle="tab" href="#regardlessConsolidatedAllContent">All</a>
+                        </li>
+                    </ul>
+                    <!-- Subtabs Content for Regardless Consolidated Contributors -->
+                    <div class="tab-content mt-2">
+                        <!-- Update the src attribute with the correct file names -->
+                        <div class="tab-pane fade" id="regardlessConsolidatedEpoch1Content">
+                            <iframe src="regarless_epoch1_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="regardlessConsolidatedEpoch2Content">
+                            <iframe src="regarless_epoch2_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="regardlessConsolidatedEpoch3Content">
+                            <iframe src="regarless_epoch3_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="regardlessConsolidatedAllContent">
+                            <iframe src="regarless_all_epoch_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="consolidatedContent">
-            <ul class="nav nav-tabs" id="consolidatedEpochTabs">
+
+        <!-- Relationship Content -->
+        <div class="tab-pane fade" id="relationshipContent">
+            <ul class="nav nav-tabs" id="relationshipContributorTabs">
+                <!-- Relationship Contributors Tab -->
                 <li class="nav-item">
-                    <a class="nav-link" id="consolidatedEpoch1Tab" data-bs-toggle="tab" href="#consolidatedEpoch1Content">Epoch 1</a>
+                    <a class="nav-link active" id="relationshipContributorsTab" data-bs-toggle="tab" href="#relationshipContributorsContent">Contributors</a>
                 </li>
+                <!-- Relationship Consolidated Contributors Tab -->
                 <li class="nav-item">
-                    <a class="nav-link" id="consolidatedEpoch2Tab" data-bs-toggle="tab" href="#consolidatedEpoch2Content">Epoch 2</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="consolidatedEpoch3Tab" data-bs-toggle="tab" href="#consolidatedEpoch3Content">Epoch 3</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="consolidatedAllTab" data-bs-toggle="tab" href="#consolidatedAllContent">All</a>
+                    <a class="nav-link" id="relationshipConsolidatedTab" data-bs-toggle="tab" href="#relationshipConsolidatedContent">Consolidated Contributors</a>
                 </li>
             </ul>
             <div class="tab-content mt-2">
-                <div class="tab-pane fade" id="consolidatedEpoch1Content">
-                    <iframe src="epoch1_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                <!-- Relationship Contributors Content -->
+                <div class="tab-pane fade show active" id="relationshipContributorsContent">
+                    <!-- Subtabs for Relationship Contributors -->
+                    <ul class="nav nav-tabs" id="relationshipContributorsEpochTabs">
+                        <li class="nav-item">
+                            <a class="nav-link" id="relationshipContributorsEpoch1Tab" data-bs-toggle="tab" href="#relationshipContributorsEpoch1Content">Epoch 1</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="relationshipContributorsEpoch2Tab" data-bs-toggle="tab" href="#relationshipContributorsEpoch2Content">Epoch 2</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="relationshipContributorsEpoch3Tab" data-bs-toggle="tab" href="#relationshipContributorsEpoch3Content">Epoch 3</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="relationshipContributorsAllTab" data-bs-toggle="tab" href="#relationshipContributorsAllContent">All</a>
+                        </li>
+                    </ul>
+                    <!-- Subtabs Content for Relationship Contributors -->
+                    <div class="tab-content mt-2">
+                        <!-- Update the src attribute with the correct file names -->
+                        <div class="tab-pane fade" id="relationshipContributorsEpoch1Content">
+                            <iframe src="contributor_epoch1_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="relationshipContributorsEpoch2Content">
+                            <iframe src="contributor_epoch2_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="relationshipContributorsEpoch3Content">
+                            <iframe src="contributor_epoch3_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="relationshipContributorsAllContent">
+                            <iframe src="contributor_all_epoch_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="consolidatedEpoch2Content">
-                    <iframe src="epoch2_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
-                </div>
-                <div class="tab-pane fade" id="consolidatedEpoch3Content">
-                    <iframe src="epoch3_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
-                </div>
-                <div class="tab-pane fade" id="consolidatedAllContent">
-                    <iframe src="all_epoch_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                <!-- Relationship Consolidated Contributors Content -->
+                <div class="tab-pane fade" id="relationshipConsolidatedContent">
+                    <!-- Subtabs for Relationship Consolidated Contributors -->
+                    <ul class="nav nav-tabs" id="relationshipConsolidatedEpochTabs">
+                        <li class="nav-item">
+                            <a class="nav-link" id="relationshipConsolidatedEpoch1Tab" data-bs-toggle="tab" href="#relationshipConsolidatedEpoch1Content">Epoch 1</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="relationshipConsolidatedEpoch2Tab" data-bs-toggle="tab" href="#relationshipConsolidatedEpoch2Content">Epoch 2</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="relationshipConsolidatedEpoch3Tab" data-bs-toggle="tab" href="#relationshipConsolidatedEpoch3Content">Epoch 3</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="relationshipConsolidatedAllTab" data-bs-toggle="tab" href="#relationshipConsolidatedAllContent">All</a>
+                        </li>
+                    </ul>
+                    <!-- Subtabs Content for Relationship Contributors -->
+                    <div class="tab-content mt-2">
+                        <!-- Update the src attribute with the correct file names -->
+                        <div class="tab-pane fade" id="relationshipConsolidatedEpoch1Content">
+                            <iframe src="epoch1_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="relationshipConsolidatedEpoch2Content">
+                            <iframe src="epoch2_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="relationshipConsolidatedEpoch3Content">
+                            <iframe src="epoch3_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="relationshipConsolidatedAllContent">
+                            <iframe src="all_epoch_coauthor_support.html" width="100%" height="1000px" frameborder="0"></iframe>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
